@@ -145,13 +145,21 @@ public class Utilities {
         try {
             //ExStart:SaveAsImage
             // extract the image from stream
-//            BufferedImage img = ImageIO.read(imageContent);
-//            //save the image in the form of jpeg
-//            ImageIO.write(img, "jpg", new File(path + "\\images" + FilenameUtils.getBaseName(imageName) + ".jpg"));
+            BufferedImage img = ImageIO.read(imageContent);
+            //save the image in the form of jpeg
+            ImageIO.write(img, "jpg", Utilities.makeImagePath(path, imageName));
             //ExEnd:SaveAsImage
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static File makeImagePath(String path, String imageName) {
+        final File directory = new File(path + "\\images\\");
+        if (!directory.exists() && !directory.mkdirs()) {
+            System.out.println("Can't create directory for images! " + directory.getAbsolutePath());
+        }
+        return new File(directory.getAbsolutePath() + File.separator + FilenameUtils.getBaseName(imageName) + ".jpg");
     }
 
     /// <summary>

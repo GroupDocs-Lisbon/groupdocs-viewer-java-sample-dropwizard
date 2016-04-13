@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,18 @@ public class ViewerResource {
         return "Please upload a valid MS Word file";
     }
 
+    @GET
+    @Produces("image/png")
+    @Path("/Uploads/images/{filename}")
+    public Response mainHandler(@PathParam("filename") String filename) {
+        try {
+            final byte[] bytes = ViewGenerator.loadPageImage(filename);
+            return Response.ok().entity(bytes).build();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Response.serverError().build();
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

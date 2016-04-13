@@ -16,10 +16,12 @@ import com.groupdocs.viewer.handler.ViewerHtmlHandler;
 import com.groupdocs.viewer.handler.ViewerImageHandler;
 import com.groupdocs.viewer.samples.dropwizard.model.business.HtmlInfo;
 import com.groupdocs.viewer.samples.dropwizard.model.business.ImageInfo;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -243,9 +245,6 @@ public class ViewGenerator {
         // Create image handler
         ViewerImageHandler imageHandler = new ViewerImageHandler(config);
 
-        // Guid implies that unique document name
-        String guid = documentName;
-
         //Initialize ImageOptions Object
         ImageOptions options = new ImageOptions();
 
@@ -254,7 +253,7 @@ public class ViewGenerator {
             options.setPassword(DocumentPassword);
 
         //Get document pages in image form
-        List<PageImage> Images = imageHandler.getPages(guid, options);
+        List<PageImage> Images = imageHandler.getPages(documentName, options);
 
         List<ImageInfo> contents = new ArrayList<ImageInfo>();
 
@@ -262,10 +261,10 @@ public class ViewGenerator {
             String imgname = image.getPageNumber() + "_" + FilenameUtils.getName(documentName);
             imgname = imgname.replace("\\s+", "_");
 
-            Utilities.saveAsImage(documentName, imgname, image.getStream());
+            Utilities.saveAsImage(config.getTempPath(), imgname, image.getStream());
 
             ImageInfo imageInfo = new ImageInfo();
-            imageInfo.setImageUrl("/Uploads/images/" + imgname + ".jpg?" + UUID.randomUUID().toString());
+            imageInfo.setImageUrl("/Uploads/images/" + FilenameUtils.getBaseName(imgname) + ".jpg?" + UUID.randomUUID().toString());
             imageInfo.setPageNmber(image.getPageNumber());
             imageInfo.setHtmlContent("<div class='image_page'><img src='" + imageInfo.getImageUrl() + "' /></div>");
             contents.add(imageInfo);
@@ -315,7 +314,7 @@ public class ViewGenerator {
             String imgname = image.getPageNumber() + "_" + FilenameUtils.getName(DocumentName);
             imgname = imgname.replace("\\s+", "_");
 
-            Utilities.saveAsImage(new File(DocumentName).getParentFile().getAbsolutePath(), imgname, image.getStream());
+            Utilities.saveAsImage(config.getTempPath(), imgname, image.getStream());
 
             ImageInfo imageInfo = new ImageInfo();
             imageInfo.setImageUrl("/Uploads/images/" + imgname + ".jpg?" + UUID.randomUUID().toString());
@@ -368,7 +367,7 @@ public class ViewGenerator {
             String imgname = image.getPageNumber() + "_" + FilenameUtils.getBaseName(DocumentName);
             imgname = imgname.replace("\\s+", "_");
 
-            Utilities.saveAsImage(new File(DocumentName).getParentFile().getAbsolutePath(), imgname, image.getStream());
+            Utilities.saveAsImage(config.getTempPath(), imgname, image.getStream());
 
             ImageInfo imageInfo = new ImageInfo();
             imageInfo.setImageUrl("/Uploads/images/" + imgname + ".jpg?" + UUID.randomUUID().toString());
@@ -423,7 +422,7 @@ public class ViewGenerator {
             String imgname = image.getPageNumber() + "_" + FilenameUtils.getBaseName(DocumentName);
             imgname = imgname.replace("\\s+", "_");
 
-            Utilities.saveAsImage(new File(DocumentName).getParentFile().getAbsolutePath(), imgname, image.getStream());
+            Utilities.saveAsImage(config.getTempPath(), imgname, image.getStream());
 
             ImageInfo imageInfo = new ImageInfo();
             imageInfo.setImageUrl("/Uploads/images/" + imgname + ".jpg?" + UUID.randomUUID().toString());
@@ -542,5 +541,10 @@ public class ViewGenerator {
                         node.getLastModificationDate()));
             }
         }
+    }
+
+    public static byte[] loadPageImage(String filename) throws IOException {
+        final File imagePath = Utilities.makeImagePath(config.getTempPath(), filename);
+        return FileUtils.readFileToByteArray(imagePath);
     }
 }
