@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.logging.Level;
 
 /**
+ * The type Dropwizard config.
  * @author Aleksey Permyakov (06.04.2016).
  */
 public class DropwizardConfig extends Configuration {
@@ -16,6 +17,10 @@ public class DropwizardConfig extends Configuration {
     private String storagePath;
     private String licensePath;
 
+    /**
+     * Gets storage path.
+     * @return the storage path
+     */
     @JsonProperty
     public String getStoragePath() {
         if (!new File(storagePath).exists()) {
@@ -25,11 +30,19 @@ public class DropwizardConfig extends Configuration {
         return storagePath;
     }
 
+    /**
+     * Sets storage path.
+     * @param storagePath the storage path
+     */
     @JsonProperty
     public void setStoragePath(String storagePath) {
         this.storagePath = storagePath;
     }
 
+    /**
+     * Gets license path.
+     * @return the license path
+     */
     @JsonProperty
     public String getLicensePath() {
         if (licensePath == null || licensePath.isEmpty()) {
@@ -38,6 +51,10 @@ public class DropwizardConfig extends Configuration {
         return licensePath;
     }
 
+    /**
+     * Sets license path.
+     * @param licensePath the license path
+     */
     @JsonProperty
     public void setLicensePath(String licensePath) {
         this.licensePath = licensePath;

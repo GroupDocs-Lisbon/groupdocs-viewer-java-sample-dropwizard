@@ -29,7 +29,7 @@ $(function () {
                     var start = ui.item.attr('id');
                     var newIndex = ui.item.index();
 
-                    var param = ""
+                    var param = "";
                     if ($('input[name="RenderOptions"]:checked').val() == "html")
                         param = 'action=renderashtmlwithreorder&filepath=' + guid + '&start=' + start + '&new=' + newIndex;
                     else
@@ -55,7 +55,7 @@ $(function () {
                         $(this).rotate(rotation);
                         var guid = $('#hfguid').val();
 
-                        var param = ""
+                        var param = "";
                         if ($('input[name="RenderOptions"]:checked').val() == "html")
                             param = 'action=renderashtmlwithrotate&filepath=' + guid + '&page=' + $(this).attr('id') + '&angle=' + 90;
                         else
@@ -80,7 +80,7 @@ $(function () {
         var guid = $('#hfguid').val();
         var text = $('#txtWatermark').val();
 
-        var param = ""
+        var param = "";
         if ($('input[name="RenderOptions"]:checked').val() == "html")
             param = 'action=renderashtmlwithwatermark&filepath=' + guid + '&watermark=' + text;
         else
@@ -129,7 +129,7 @@ $(function () {
             }
         });
     });
-})
+});
 
 
 
@@ -160,20 +160,18 @@ function GenerateHtml(result) {
     // in a case of success the returned result would be written in the result box
     $('.viewer').text('');
     $('#reorderable').empty();
-   
+
     $(result).each(function (page) {
 
         $('.viewer').append(this.htmlContent);
         $('#reorderable').append('<li id="' + this.pageNmber + '" >' + this.pageNmber + '</li>');
-       
-
     });
 
 
 }
 function onComplete() {
     $('#grpTransform').show();
-    alert('Working Complete');
+    //alert('Working Complete');
 }
 function onFail(err) {
 

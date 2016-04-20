@@ -27,23 +27,41 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The type Viewer resource.
  * @author Aleksey Permyakov
  */
 @Path("/")
 public class ViewerResource {
     private final DropwizardConfig dropwizardConfig;
 
+    /**
+     * Instantiates a new Viewer resource.
+     * @param viewerConfig     the viewer config
+     * @param dropwizardConfig the dropwizard config
+     */
     public ViewerResource(ViewerConfig viewerConfig, DropwizardConfig dropwizardConfig) {
         ViewGenerator.initGenerator(viewerConfig);
         this.dropwizardConfig = dropwizardConfig;
     }
 
+    /**
+     * Gets index.
+     * @param request the request
+     * @return the index
+     */
     @GET
     @Produces(MediaType.TEXT_HTML)
     public ViewerView getIndex(@Context HttpServletRequest request) {
         return new ViewerView(request.getContextPath());
     }
 
+    /**
+     * Upload handler string.
+     * @param formDataMultiPart the form data multi part
+     * @param request           the request
+     * @param response          the response
+     * @return the string
+     */
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -75,6 +93,11 @@ public class ViewerResource {
         return "Please upload a valid MS Word file";
     }
 
+    /**
+     * Main handler response.
+     * @param filename the filename
+     * @return the response
+     */
     @GET
     @Produces("image/png")
     @Path("/Uploads/images/{filename}")
@@ -88,6 +111,11 @@ public class ViewerResource {
         return Response.serverError().build();
     }
 
+    /**
+     * Main handler response.
+     * @param request the request
+     * @return the response
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/Controllers/MainHandler.ashx")
@@ -105,19 +133,19 @@ public class ViewerResource {
 
                 String WatermarkText = request.getParameter("watermark");
                 List<HtmlInfo> lstPages = ViewGenerator.renderDocumentAsHtml(filePath, WatermarkText, Color.RED, 100, null);
-                generateResponse(lstPages);
+                return generateResponse(lstPages);
             } else if ("renderashtmlwithreorder".equals(request.getParameter("action"))) {
 
                 int startIndex = Integer.parseInt(request.getParameter("start"));
                 int newIndex = Integer.parseInt(request.getParameter("new"));
                 List<HtmlInfo> lstPages = ViewGenerator.renderDocumentAsHtml(filePath, startIndex, newIndex + 1, null);
-                generateResponse(lstPages);
+                return generateResponse(lstPages);
             } else if ("renderashtmlwithrotate".equals(request.getParameter("action"))) {
 
                 int pageId = Integer.parseInt(request.getParameter("page"));
                 int angle = Integer.parseInt(request.getParameter("angle"));
                 List<HtmlInfo> lstPages = ViewGenerator.rotateDocumentAsHtml(filePath, pageId, angle, null);
-                generateResponse(lstPages);
+                return generateResponse(lstPages);
             }
             if ("renderasimage".equals(request.getParameter("action"))) {
                 // File path is also included in the http request
@@ -129,19 +157,19 @@ public class ViewerResource {
 
                 String WatermarkText = request.getParameter("watermark");
                 List<ImageInfo> lstPages = ViewGenerator.renderDocumentAsImages(filePath, WatermarkText, Color.RED, 100, null);
-                generateResponse(lstPages);
+                return generateResponse(lstPages);
             } else if ("renderasimagewithreorder".equals(request.getParameter("action"))) {
 
                 int startIndex = Integer.parseInt(request.getParameter("start"));
                 int newIndex = Integer.parseInt(request.getParameter("new"));
                 List<ImageInfo> lstPages = ViewGenerator.renderDocumentAsImages(filePath, startIndex, newIndex + 1, null);
-                generateResponse(lstPages);
+                return generateResponse(lstPages);
             } else if ("renderasimagewithrotate".equals(request.getParameter("action"))) {
 
                 int pageId = Integer.parseInt(request.getParameter("page"));
                 int angle = Integer.parseInt(request.getParameter("angle"));
                 List<ImageInfo> lstPages = ViewGenerator.rotateDocumentAsImages(filePath, pageId, angle, null);
-                generateResponse(lstPages);
+                return generateResponse(lstPages);
             }
 
         } catch (Exception e) {
@@ -151,12 +179,12 @@ public class ViewerResource {
     }
 
 
+    /**
+     * Generate response response.
+     * @param obj the obj
+     * @return the response
+     */
     public Response generateResponse(Object obj) {
-//        JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
-//        javaScriptSerializer.MaxJsonLength = int.MaxValue;
-//        string serObj = javaScriptSerializer.Serialize(obj);
-//        context.Response.ContentType = "text/html";
-//        context.Response.Write(serObj);
         return Response.ok(200).entity(obj).build();
     }
 //    public void GenerateFile(Stream obj, HttpContext context)

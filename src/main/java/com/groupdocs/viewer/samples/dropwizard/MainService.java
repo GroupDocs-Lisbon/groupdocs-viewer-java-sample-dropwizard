@@ -15,21 +15,33 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import javax.servlet.MultipartConfigElement;
 
 /**
- *
+ * The type Main service.
  * @author Aleksey Permyakov
  */
-
 public class MainService extends Application<DropwizardConfig> {
-    
-    public static void main( String[] args ) throws Exception{
+
+    /**
+     * The entry point of application.
+     * @param args the input arguments
+     * @throws Exception the exception
+     */
+    public static void main(String[] args) throws Exception {
         new MainService().run(args);
     }
 
+    /**
+     * Gets name.
+     * @return the name
+     */
     @Override
     public String getName() {
         return "GroupDocs Viewer for Java v3.0.0";
     }
 
+    /**
+     * Initialize.
+     * @param bootstrap the bootstrap
+     */
     @Override
     public void initialize(Bootstrap<DropwizardConfig> bootstrap) {
         bootstrap.addBundle(new MultiPartBundle());
@@ -37,6 +49,12 @@ public class MainService extends Application<DropwizardConfig> {
         bootstrap.addBundle(new AssetsBundle("/assets/", "/assets/"));
     }
 
+    /**
+     * Run.
+     * @param configuration the configuration
+     * @param environment   the environment
+     * @throws Exception the exception
+     */
     @Override
     public void run(DropwizardConfig configuration, Environment environment) throws Exception {
         final ViewerResource resource = new ViewerResource(new ViewerConfig(configuration), configuration);

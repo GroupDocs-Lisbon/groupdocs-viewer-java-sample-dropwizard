@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * The type Utilities.
  * @author Aleksey Permyakov (12.04.2016).
  */
 public class Utilities {
@@ -27,21 +28,36 @@ public class Utilities {
     private static List<String> EXT_ARR = Arrays.asList("doc", "docx", "xls", "xlsx", "pdf", "ppt", "pptx", "html", "xml", "bmp", "jpg", "gif");
 
 
+    /**
+     * Check extenstion boolean.
+     * @param ext the ext
+     * @return the boolean
+     */
     public static boolean checkExtenstion(String ext) {
         return EXT_ARR.contains(ext);
     }
 
+    /**
+     * Gets upload path.
+     * @param dropwizardConfig the dropwizard config
+     * @return the upload path
+     */
     public static String getUploadPath(DropwizardConfig dropwizardConfig) {
         return dropwizardConfig.getStoragePath() + "/";
     }
 
+    /**
+     * The type Page transformations.
+     */
     public static class PageTransformations {
-        /// <summary>
-        /// Rotate a Page before rendering
-        /// </summary>
-        /// <param name="options"></param>
-        /// <param name="angle"></param>
-
+        /**
+         * Rotate a Page before rendering
+         * @param handler    the handler
+         * @param guid       the guid
+         * @param pageNumber the page number
+         * @param angle      the angle
+         * @throws Exception the exception
+         */
         public static void rotatePages(ViewerHandler handler, String guid, int pageNumber, int angle) throws Exception {
             //ExStart:rotationAngle
             // Set the property of handler's rotate Page
@@ -49,13 +65,14 @@ public class Utilities {
             //ExEnd:rotationAngle
         }
 
-        /// <summary>
-        /// Reorder a page before rendering
-        /// </summary>
-        /// <param name="viewerHandler">Base class of handlers</param>
-        /// <param name="guid">File name</param>
-        /// <param name="currentPageNumber">Existing number of page</param>
-        /// <param name="newPageNumber">New number of page</param>
+        /**
+         * Reorder a page before rendering
+         * @param viewerHandler     Base class of handlers
+         * @param guid              File name
+         * @param currentPageNumber Existing number of page
+         * @param newPageNumber     New number of page
+         * @throws Exception the exception
+         */
         public static void reorderPage(ViewerHandler viewerHandler, String guid, int currentPageNumber, int newPageNumber) throws Exception {
             //ExStart:reorderPage
             //Initialize the ReorderPageOptions object by passing guid as document name, current Page Number, new page number
@@ -65,62 +82,62 @@ public class Utilities {
             //ExEnd:reorderPage
         }
 
-        /// <summary>
-        /// add a watermark text to all rendered images.
-        /// </summary>
-        /// <param name="options">HtmlOptions by reference</param>
-        /// <param name="text">Watermark text</param>
-        /// <param name="color">System.Drawing.Color</param>
-        /// <param name="position"></param>
-        /// <param name="width"></param>
+        /**
+         * add a watermark text to all rendered images.
+         * @param options  HtmlOptions by reference
+         * @param text     Watermark text
+         * @param color    System.Drawing.Color
+         * @param position the position
+         * @param width    the width
+         */
         public static void addWatermark(ImageOptions options, String text, Color color, WatermarkPosition position, float width) {
-            //ExStart:AddWatermark
-            //Initialize watermark object by passing the text to display.
-            Watermark watermark = new Watermark(text);
-            //Apply the watermark color by assigning System.Drawing.Color.
-            watermark.setColor(color);
-            //Set the watermark's position by assigning an enum WatermarkPosition's value.
-            watermark.setPosition(position);
-            //set an integer value as watermark width
-            watermark.setWidth(width);
+            Watermark watermark = createWatermark(text, color, position, width);
             //Assign intialized and populated watermark object to ImageOptions or HtmlOptions objects
             options.setWatermark(watermark);
             //ExEnd:AddWatermark
         }
 
-        /// <summary>
-        /// add a watermark text to all rendered Html pages.
-        /// </summary>
-        /// <param name="options">HtmlOptions by reference</param>
-        /// <param name="text">Watermark text</param>
-        /// <param name="color">System.Drawing.Color</param>
-        /// <param name="position"></param>
-        /// <param name="width"></param>
+        /**
+         * add a watermark text to all rendered Html pages.
+         * @param options  HtmlOptions by reference
+         * @param text     Watermark text
+         * @param color    System.Drawing.Color
+         * @param position the position
+         * @param width    the width
+         */
         public static void addWatermark(HtmlOptions options, String text, Color color, WatermarkPosition position, float width) {
-
-            Watermark watermark = new Watermark(text);
-            watermark.setColor(color);
-            watermark.setPosition(position);
-            watermark.setWidth(width);
+            Watermark watermark = createWatermark(text, color, position, width);
             options.setWatermark(watermark);
         }
 
     }
 
+    private static Watermark createWatermark(String text, Color color, WatermarkPosition position, float width) {
+        //Initialize watermark object by passing the text to display.
+        Watermark watermark = new Watermark(text);
+        //Apply the watermark color by assigning System.Drawing.Color.
+        watermark.setColor(color);
+        //Set the watermark's position by assigning an enum WatermarkPosition's value.
+        watermark.setPosition(position);
+        //set an integer value as watermark width
+        watermark.setWidth(width);
+        return watermark;
+    }
 
-    /// <summary>
-    /// Set product's license
-    /// </summary>
+    /**
+     * Set product's license
+     * @param licensePath the license path
+     */
     public static void applyLicense(String licensePath) {
         License lic = new License();
         lic.setLicense(licensePath);
     }
 
-    /// <summary>
-    /// Save file in html form
-    /// </summary>
-    /// <param name="filename">Save as provided string</param>
-    /// <param name="content">Html contents in String form</param>
+    /**
+     * Save file in html form
+     * @param filename Save as provided string
+     * @param content  Html contents in String form
+     */
     public static void saveAsHtml(String filename, String content) {
         try {
             //ExStart:SaveAsHTML
@@ -136,24 +153,31 @@ public class Utilities {
 
     }
 
-    /// <summary>
-    /// Save the rendered images at disk
-    /// </summary>
-    /// <param name="imageName">Save as provided string</param>
-    /// <param name="imageContent">stream of image contents</param>
+    /**
+     * Save the rendered images at disk
+     * @param path         the path
+     * @param imageName    Save as provided string
+     * @param imageContent stream of image contents
+     */
     public static void saveAsImage(String path, String imageName, InputStream imageContent) {
         try {
             //ExStart:SaveAsImage
             // extract the image from stream
             BufferedImage img = ImageIO.read(imageContent);
             //save the image in the form of jpeg
-            ImageIO.write(img, "jpg", Utilities.makeImagePath(path, imageName));
+            ImageIO.write(img, "png", Utilities.makeImagePath(path, imageName));
             //ExEnd:SaveAsImage
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
+    /**
+     * Make image path file.
+     * @param path      the path
+     * @param imageName the image name
+     * @return the file
+     */
     public static File makeImagePath(String path, String imageName) {
         final File directory = new File(path + "\\images\\");
         if (!directory.exists() && !directory.mkdirs()) {
@@ -162,11 +186,11 @@ public class Utilities {
         return new File(directory.getAbsolutePath() + File.separator + FilenameUtils.getBaseName(imageName) + ".jpg");
     }
 
-    /// <summary>
-    /// Save file in any format
-    /// </summary>
-    /// <param name="filename">Save as provided string</param>
-    /// <param name="content">Stream as content of a file</param>
+    /**
+     * Save file in any format
+     * @param filename Save as provided string
+     * @param content  Stream as content of a file
+     */
     public static void saveFile(String filename, InputStream content) {
         try {
             //ExStart:SaveAnyFile
